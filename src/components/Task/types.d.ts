@@ -1,5 +1,4 @@
 type TaskPosition = 'backlog' | 'breakdown' | 'implement' | 'validate'
-type TaskStatus = 'doing' | 'done'
 
 type Task = {
     id: string
@@ -7,12 +6,12 @@ type Task = {
     details?: string
     developer?: string
     position: TaskPosition
-    status: TaskStatus
+    isDone: boolean
 }
 
 type TaskAction =
     | { type: 'setPosition', position: TaskPosition }
-    | { type: 'setStatus', status: TaskStatus }
+    | { type: 'setIsDone', isDone: boolean }
     | { type: 'field', field: 'title' | 'details' | 'developer', value: string }
 
 export {

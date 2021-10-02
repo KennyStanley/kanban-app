@@ -20,7 +20,7 @@ export function TasksProvider(props: {children?: any}) {
             id: '1',
             title: 'Make Kanban App',
             position: 'backlog',
-            status: 'doing',
+            isDone: true,
             developer: 'Kenny'
         },
         {
@@ -28,7 +28,7 @@ export function TasksProvider(props: {children?: any}) {
             title: 'Make VR Demo app',
             details: 'Hub with links to all working VR demos',
             position: 'backlog',
-            status: 'doing',
+            isDone: false,
             developer: 'Kenny'
         }
     ])
