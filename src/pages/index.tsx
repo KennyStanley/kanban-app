@@ -1,34 +1,48 @@
 import Head from 'next/head'
 
-import Header, { HeaderTypes } from '@/components/Header'
+import { Header, HeaderComponent } from '@/components/Header'
 import { TasksProvider } from '@/contexts/TasksProvider'
 import Board from '@/components/Board'
+import DarkModeToggle from '@/components/DarkModeToggle'
+import useLocalStorage from '@/hooks/useLocalStorage'
+import useLoaded from '@/hooks/useLoaded'
 
 export default function Home() {
-    const headerData: HeaderTypes = {
+    const headerData: Header = {
         title: 'Kenny Stanley',
         subtitle: 'Kanban Board',
     }
 
-    return (
-        <div className="flex flex-col items-center justify-center">
-            <Head>
-                <title>Cool as a Kanban</title>
-                <meta
-                    name="description"
-                    content="A super simple Kanban app made by Kenny Stanley Jr."
-                />
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
+    const [darkMode, setDarkMode] = useLocalStorage('dark-mode')
 
-            <main className="flex flex-col items-center justify-start w-full flex-1 px-20 text-center h-screen min-h-screen">
-                <Header {...headerData} />
-                <section className="flex items-stretch justify-around my-6 sm:w-full gap-2 h-full">
-                    <TasksProvider>
-                        <Board />
-                    </TasksProvider>
-                </section>
-            </main>
-        </div>
+    const loaded = useLoaded()
+
+    return (
+        <>
+            {loaded && <div className={`${darkMode || false ? 'dark': ''} flex flex-col items-center justify-center`}>
+                <Head>
+                    <title>Cool as a Kanban</title>
+                    <meta
+                        name="description"
+                        content="A super simple Kanban app made by Kenny Stanley Jr."
+                    />
+                    <link rel="icon" href="/favicon.ico" />
+                </Head>
+
+                <main className="relative bg-gray-300 dark:bg-gray-900 flex flex-col items-center justify-start w-full flex-1 px-20 text-center h-screen min-h-screen">
+                    <HeaderComponent {...headerData} />
+                    
+                    <div className="absolute top-4 right-4">
+                        <DarkModeToggle darkMode={darkMode || false} setDarkMode={setDarkMode} />
+                    </div>
+                    
+                    <section className="flex items-stretch justify-around my-8 sm:w-full gap-2 h-full">
+                        <TasksProvider>
+                            <Board />
+                        </TasksProvider>
+                    </section>
+                </main>
+            </div>}
+        </>
     )
 }

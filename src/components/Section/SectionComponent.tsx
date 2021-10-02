@@ -3,19 +3,19 @@ import { Task } from "@/components/Task/types"
 import { useTasks } from "@/contexts/TasksProvider"
 import { useState, useEffect } from "react"
 import { Draggable, Droppable } from "react-beautiful-dnd"
-import { Section } from "./types"
+import { Section } from "."
 
 const SectionComponent = (props: { title: string, tasks?: Task[] }) => {
 
     return (
         <div className="flex flex-col w-full">
-            <h2 className="text-2xl uppercase">{props.title}</h2>
+            <h2 className="text-3xl text-gray-800 dark:text-gray-100 capitalize">{props.title}</h2>
             <Droppable droppableId={props.title}>
                 {(provided, snapshot) => (
                 <div 
                     ref={provided.innerRef}
                     {...provided.droppableProps}   
-                    className="border-4 border-black rounded-xl p-8 w-full h-full"
+                    className="border-4 border-gray-400 dark:border-gray-700 rounded-xl p-8 w-full h-full"
                 >
                     <ul role="list">
                         {props.tasks?.map((task, index) => {
