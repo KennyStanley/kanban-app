@@ -8,8 +8,6 @@ export default function Board() {
     const {tasks, updateTask, getTaskById, setTasks} = useTasks()
 
     const handleDragEnd = useCallback((result: DropResult, provided: ResponderProvided) => {
-        console.log('drag ended')
-        console.log(result)
 
         const taskId = result.draggableId
         const destination = result.destination
