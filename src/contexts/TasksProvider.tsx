@@ -38,8 +38,6 @@ export function TasksProvider(props: {children?: any}) {
     }, [tasks])
 
     const updateTask = useCallback((updatedTask: Task) => {
-        // console.log('Updating Task: ')
-        // console.log(updatedTask)
         setTasks((prevTasks: Task[]) => prevTasks.map(task => {
             if (task.id !== updatedTask.id) return task
             else return updatedTask
