@@ -1,27 +1,10 @@
 import { useTasks } from "@/contexts/TasksProvider"
-import { useEffect, useReducer, useState, useCallback } from "react"
+import { useReducer, useState, useCallback } from "react"
 import Toggle from "./Toggle"
-import { Task, TaskAction } from "./types"
-
-const initialState: Task = {
-    id: '',
-    title: '',
-    position: 'backlog',
-    isDone: false
-}
+import { Task, TaskAction } from "."
 
 function taskReducer(state: Task, action: TaskAction): Task {
     switch (action.type) {
-        case 'setPosition': {
-            if (action.position) {
-                return {
-                    ...state,
-                    position: action.position,
-                    isDone: false
-                }
-            }
-            break
-        }
         case 'field': {
             return {
                 ...state,
@@ -35,17 +18,26 @@ function taskReducer(state: Task, action: TaskAction): Task {
     return state
 }
 
-const TaskComponent = (props: { task?: Task }) => {
-    const [state, dispatch] = useReducer(taskReducer, props.task || initialState)
+const TaskComponent = (props: { task: Task }) => {
+    const [state, dispatch] = useReducer(taskReducer, props.task)
     const [isEditing, setIsEditing] = useState(false)
-    const [isDone, setIsDone] = useState(props.task?.isDone || false)
+    const [isDone, setIsDone] = useState(props.task.isDone || false)
+
+    const { title, details, developer } = state
 
     const {updateTask} = useTasks()
 
-    const { id, title, details, developer, position } = state
+    const handleToggle = useCallback((input: boolean) => {
+        console.log(input)
+        dispatch({ type: 'setIsDone', isDone: input})
+        setIsDone(input)
+
+        if (updateTask) updateTask({...state, isDone: input})
+
+    }, [setIsDone])
 
     return (
-        <div className={`${isDone ? 'bg-green-800' : 'bg-indigo-800'} border-2 text-white rounded-lg relative`}>
+        <div className={`${isDone ? 'bg-green-800' : 'bg-indigo-800'} border-2 border-gray-700 dark:border-gray-300 text-white rounded-lg relative`}>
             <div className="flex flex-col p-2">
                 {isEditing ? 
                     <>
@@ -123,9 +115,9 @@ const TaskComponent = (props: { task?: Task }) => {
                             <div className="flex items-center gap-2">
                                 <p className="text-xs">{isDone ? 'done' : 'doing'}</p>
                                 <Toggle 
-                                    taskId={id} 
+                                    taskId={props.task.id} 
                                     value={isDone} 
-                                    handleToggle={setIsDone} />   
+                                    handleToggle={handleToggle} />   
                             </div>
                                                      
                         </div>
