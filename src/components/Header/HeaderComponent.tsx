@@ -1,13 +1,10 @@
-export type HeaderTypes = {
-    title: string
-    subtitle: string
-}
+import { Header } from "."
 
-const Header = (headerData: HeaderTypes) => {
+const HeaderComponent = (headerData: Header) => {
     return (
         <>
-            <div className="flex items-baseline">
-                <h1 className="text-3xl font-bold">
+            <div className="mt-2 text-gray-600 flex items-baseline">
+                <h1 className="text-xl font-bold">
                     {headerData.title}
                 </h1>
                 <p className="ml-2 text-xl">
@@ -18,4 +15,4 @@ const Header = (headerData: HeaderTypes) => {
     )
 }
 
-export default Header
+export default HeaderComponent
