@@ -17,5 +17,6 @@ type TaskAction =
 
 export {
     Task,
-    TaskAction
+    TaskAction,
+    TaskPosition
 }
