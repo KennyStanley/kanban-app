@@ -1,12 +1,13 @@
 import { useTasks } from "@/contexts/TasksProvider"
 import { useEffect, useReducer, useState, useCallback } from "react"
+import Toggle from "./Toggle"
 import { Task, TaskAction } from "./types"
 
 const initialState: Task = {
     id: '',
     title: '',
     position: 'backlog',
-    status: 'doing'
+    isDone: false
 }
 
 function taskReducer(state: Task, action: TaskAction): Task {
@@ -16,18 +17,9 @@ function taskReducer(state: Task, action: TaskAction): Task {
                 return {
                     ...state,
                     position: action.position,
-                    status: 'doing'
+                    isDone: false
                 }
             }
-            break
-        }
-        case 'setStatus': {
-            if (action.status) {
-                return {
-                    ...state,
-                    status: action.status
-                }
-            } 
             break
         }
         case 'field': {
@@ -46,20 +38,21 @@ function taskReducer(state: Task, action: TaskAction): Task {
 const TaskComponent = (props: { task?: Task }) => {
     const [state, dispatch] = useReducer(taskReducer, props.task || initialState)
     const [isEditing, setIsEditing] = useState(false)
+    const [isDone, setIsDone] = useState(props.task?.isDone || false)
 
     const {updateTask} = useTasks()
 
-    const { id, title, details, developer, position, status } = state
+    const { id, title, details, developer, position } = state
 
     return (
-        <div className="border-2 border-blue-600 rounded-lg relative">
+        <div className={`${isDone ? 'bg-green-800' : 'bg-indigo-800'} border-2 text-white rounded-lg relative`}>
             <div className="flex flex-col p-2">
                 {isEditing ? 
                     <>
                         <div className="mb-4 mr-8 relative border border-gray-300 rounded-md px-3 py-2 shadow-sm focus-within:ring-1 focus-within:ring-indigo-600 focus-within:border-indigo-600">
                             {title && <label
                                 htmlFor="title"
-                                className="absolute -top-2 left-2 -mt-px inline-block px-1 bg-white text-xs font-medium text-gray-900"
+                                className={`${isDone ? 'bg-green-800' : 'bg-indigo-800'} absolute -top-2 left-2 -mt-px inline-block px-1 text-xs font-medium`}
                             >
                                 Title
                             </label>}
@@ -75,13 +68,13 @@ const TaskComponent = (props: { task?: Task }) => {
                                         value: e.currentTarget.value
                                     })
                                 }
-                                className="outline-none block w-full border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm"
+                                className="bg-transparent outline-none block w-full border-0 p-0 focus:ring-0 sm:text-sm"
                             />
                         </div>
                         <div className="mb-4 mr-8 relative border border-gray-300 rounded-md px-3 py-2 shadow-sm focus-within:ring-1 focus-within:ring-indigo-600 focus-within:border-indigo-600">
                             {details && <label
                                 htmlFor="details"
-                                className="absolute -top-2 left-2 -mt-px inline-block px-1 bg-white text-xs font-medium text-gray-900"
+                                className={`${isDone ? 'bg-green-800' : 'bg-indigo-800'} absolute -top-2 left-2 -mt-px inline-block px-1 text-xs font-medium`}
                             >
                                 Details
                             </label>}
@@ -97,13 +90,13 @@ const TaskComponent = (props: { task?: Task }) => {
                                         value: e.currentTarget.value
                                     })
                                 }
-                                className="outline-none block w-full border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm"
+                                className="bg-transparent outline-none block w-full border-0 p-0 focus:ring-0 sm:text-sm"
                             />
                         </div>
                         <div className="mr-8 relative border border-gray-300 rounded-md px-3 py-2 shadow-sm focus-within:ring-1 focus-within:ring-indigo-600 focus-within:border-indigo-600">
                             {developer && <label
                                 htmlFor="developer"
-                                className="absolute -top-2 left-2 -mt-px inline-block px-1 bg-white text-xs font-medium text-gray-900"
+                                className={`${isDone ? 'bg-green-800' : 'bg-indigo-800'} absolute -top-2 left-2 -mt-px inline-block px-1 text-xs font-medium`}
                             >
                                 Developer
                             </label>}
@@ -119,15 +112,22 @@ const TaskComponent = (props: { task?: Task }) => {
                                         value: e.currentTarget.value
                                     })
                                 }
-                                className="outline-none block w-full border-0 p-0 text-gray-900 placeholder-gray-500 focus:ring-0 sm:text-sm"
+                                className="bg-transparent outline-none block w-full border-0 p-0 focus:ring-0 sm:text-sm"
                             />
                         </div>
                     </>
                     :
                     <div className="text-left">
-                        <div className="flex items-baselineflex justify-between mb-2 mr-10">
+                        <div className="flex items-baselineflex justify-between mb-2">
                             <p className="text-xl p-1">{title}</p>
-                            <p className="text-xs">{status}</p>
+                            <div className="flex items-center gap-2">
+                                <p className="text-xs">{isDone ? 'done' : 'doing'}</p>
+                                <Toggle 
+                                    taskId={id} 
+                                    value={isDone} 
+                                    handleToggle={setIsDone} />   
+                            </div>
+                                                     
                         </div>
                         
                         {details && <p className="p-1 mr-8 mb-2">{details}</p>}
@@ -135,7 +135,7 @@ const TaskComponent = (props: { task?: Task }) => {
                     </div>
                 }
             </div>
-            <button className="absolute top-2 right-2" onClick={() => {
+            <button className="absolute bottom-2 right-2" onClick={() => {
                     if (isEditing && updateTask) updateTask(state) 
                     setIsEditing(!isEditing)}
                 }>
