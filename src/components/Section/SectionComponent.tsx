@@ -4,6 +4,7 @@ import { useTasks } from "@/contexts/TasksProvider"
 import { useState, useEffect } from "react"
 import { Draggable, Droppable } from "react-beautiful-dnd"
 import { Section } from "."
+import NewTaskBtn from "../Task/NewTaskBtn"
 
 const SectionComponent = (props: { title: string, tasks?: Task[] }) => {
 
@@ -15,13 +16,13 @@ const SectionComponent = (props: { title: string, tasks?: Task[] }) => {
                 <div 
                     ref={provided.innerRef}
                     {...provided.droppableProps}   
-                    className="border-4 border-gray-400 dark:border-gray-700 rounded-xl p-8 w-full h-full"
+                    className="border-4 border-gray-400 dark:border-gray-700 rounded-xl p-4 w-full h-full"
                 >
                     <ul role="list">
                         {props.tasks?.map((task, index) => {
                             if (task) {
                                 return (
-                                    <Draggable key={task.id} draggableId={task.id} index={index}>
+                                    <Draggable key={task.id.toString()} draggableId={`${task.id.toString()}`} index={index}>
                                         {(provided, snapshot) => (
                                             <li 
                                                 ref={provided.innerRef} 
@@ -35,6 +36,7 @@ const SectionComponent = (props: { title: string, tasks?: Task[] }) => {
                                 )
                             }
                         })}
+                        {props.title === 'backlog' && <NewTaskBtn />}
                     {provided.placeholder}
                     </ul>
                 </div>
