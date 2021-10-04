@@ -1,21 +1,22 @@
-type TaskPosition = 'backlog' | 'breakdown' | 'implement' | 'validate'
-
-type Task = {
-    id: string
+type NewTask = {
     title: string
     details?: string
     developer?: string
-    position: TaskPosition
+}
+
+interface Task extends NewTask {
+    id: number
+    position: string
     isDone: boolean
 }
 
 type TaskAction =
-    | { type: 'setPosition', position: TaskPosition }
+    | { type: 'setPosition', position: string }
     | { type: 'setIsDone', isDone: boolean }
     | { type: 'field', field: 'title' | 'details' | 'developer', value: string }
 
 export {
+    NewTask,
     Task,
-    TaskAction,
-    TaskPosition
+    TaskAction
 }

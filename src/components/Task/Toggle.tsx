@@ -7,7 +7,6 @@ function classNames(...classes: string[]) {
 
 export default function Toggle(
     props: {
-        taskId: string, 
         value: boolean, 
         handleToggle(isDone: boolean): void
     }) {
