@@ -33,7 +33,7 @@ export default function Home() {
                 <main className="relative bg-gray-300 dark:bg-gray-900 flex flex-col items-center justify-start w-full flex-1 md:px-20 text-center h-screen min-h-screen">
                     <HeaderComponent {...headerData} />
                     
-                    <div className="absolute top-4 right-4">
+                    <div className="absolute top-12 sm:top-4 right-4">
                         <DarkModeToggle darkMode={darkMode || false} setDarkMode={setDarkMode} />
                     </div>
                     
